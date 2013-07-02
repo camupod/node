@@ -56,6 +56,12 @@ typedef class ReqWrap<uv_connect_t> ConnectWrap;
 
 Local<Object> AddressToJS(const sockaddr* addr);
 
+Handle<Value> TCPWrap::Hello(const Arguments& args) {
+    // needed for GC magic
+    HandleScope scope;
+
+    return scope.Close(String::New("world"));
+}
 
 Local<Object> TCPWrap::Instantiate() {
   // If this assert fire then process.binding('tcp_wrap') hasn't been
@@ -126,6 +132,8 @@ void TCPWrap::Initialize(Handle<Object> target) {
   oncomplete_sym = NODE_PSYMBOL("oncomplete");
 
   target->Set(String::NewSymbol("TCP"), tcpConstructor);
+
+  NODE_SET_METHOD(target, "hello", Hello);
 }
 
 
